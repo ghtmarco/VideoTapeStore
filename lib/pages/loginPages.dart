@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_tape_store/components/my_button.dart';
 import 'package:video_tape_store/components/my_textfield.dart';
-import 'package:video_tape_store/pages/signup_page.dart';  // Import halaman Sign Up
+import 'package:video_tape_store/pages/signup_page.dart';
 
 class LoginPages extends StatelessWidget {
   LoginPages({super.key});
@@ -10,7 +10,7 @@ class LoginPages extends StatelessWidget {
   final passwordController = TextEditingController();
 
   void signUserIn() {
-    // Fungsi untuk login
+    
   }
 
   @override
@@ -101,10 +101,9 @@ class LoginPages extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // Pindah ke halaman Sign Up
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SignUpPage()),  // Arahkan ke SignUpPage
+                        MaterialPageRoute(builder: (context) => SignUpPage()),
                       );
                     },
                     child: const Text(

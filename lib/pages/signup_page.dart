@@ -11,7 +11,7 @@ class SignUpPage extends StatelessWidget {
   final confirmPasswordController = TextEditingController();
 
   void registerUser() {
-    // Fungsi untuk sign up/register user
+    
   }
 
   @override
@@ -21,7 +21,7 @@ class SignUpPage extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // Pusatkan kolom
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
               const Icon(
@@ -98,8 +98,8 @@ class SignUpPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginPages()),  // Arahkan ke SignUpPage
-                      ); // Pindah ke halaman login
+                        MaterialPageRoute(builder: (context) => LoginPages()),
+                      );
                     },
                     child: const Text(
                       'Login',
