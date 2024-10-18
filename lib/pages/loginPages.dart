@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_tape_store/components/my_button.dart';
 import 'package:video_tape_store/components/my_textfield.dart';
+import 'package:video_tape_store/pages/signup_page.dart';  // Import halaman Sign Up
 
 class LoginPages extends StatelessWidget {
   LoginPages({super.key});
@@ -9,7 +10,7 @@ class LoginPages extends StatelessWidget {
   final passwordController = TextEditingController();
 
   void signUserIn() {
-  
+    // Fungsi untuk login
   }
 
   @override
@@ -89,6 +90,29 @@ class LoginPages extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+              const SizedBox(height: 50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Don't have an account?",
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // Pindah ke halaman Sign Up
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUpPage()),  // Arahkan ke SignUpPage
+                      );
+                    },
+                    child: const Text(
+                      'Sign Up',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  )
+                ],
               ),
             ],
           ),

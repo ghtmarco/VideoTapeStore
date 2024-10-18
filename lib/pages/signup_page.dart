@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_tape_store/components/my_button.dart';
 import 'package:video_tape_store/components/my_textfield.dart';
+import 'package:video_tape_store/pages/loginPages.dart';
 
 class SignUpPage extends StatelessWidget {
   SignUpPage({super.key});
@@ -95,7 +96,10 @@ class SignUpPage extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // Pindah ke halaman login
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPages()),  // Arahkan ke SignUpPage
+                      ); // Pindah ke halaman login
                     },
                     child: const Text(
                       'Login',
