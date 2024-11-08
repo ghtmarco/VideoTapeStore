@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:video_tape_store/components/my_button.dart';
-import 'package:video_tape_store/components/my_textfield.dart';
-import 'package:video_tape_store/pages/loginPages.dart';
+import 'package:video_tape_store/widgets/my_button.dart';
+import 'package:video_tape_store/widgets/my_textfield.dart';
+import 'package:video_tape_store/pages/auth/loginPages.dart';
 
 class SignUpPage extends StatelessWidget {
   SignUpPage({super.key});

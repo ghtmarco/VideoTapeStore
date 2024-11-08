@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+    buildToolsVersion = "34.0.0"
     namespace = "com.example.video_tape_store"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
@@ -37,6 +38,8 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+    
+    ndkVersion = "27.0.12077973"
 }
 
 flutter {

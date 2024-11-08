@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:video_tape_store/pages/loginPages.dart';
+import 'package:video_tape_store/pages/auth/loginPages.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,6 +12,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      title: 'Movie Store App',
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: const Color(0xFF1A1A1A),
+        primaryColor: const Color(0xFF3498DB),
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFF3498DB),
+          secondary: Color(0xFF2ECC71),
+          surface: Color(0xFF2D2D2D),
+          background: Color(0xFF1A1A1A),
+        ),
+      ),
       home: LoginPages(),
     );
   }
