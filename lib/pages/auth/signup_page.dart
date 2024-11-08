@@ -1,115 +1,359 @@
 import 'package:flutter/material.dart';
-import 'package:video_tape_store/widgets/my_button.dart';
-import 'package:video_tape_store/widgets/my_textfield.dart';
-import 'package:video_tape_store/pages/auth/loginPages.dart';
+import 'package:video_tape_store/utils/constants.dart';
+import 'package:video_tape_store/widgets/custom_button.dart';
+import 'package:video_tape_store/widgets/custom_textfield.dart';
+import 'package:video_tape_store/pages/auth/login_page.dart';
 
-class SignUpPage extends StatelessWidget {
-  SignUpPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
 
-  void registerUser() {
-    
+class _SignUpPageState extends State<SignUpPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  bool _isLoading = false;
+  bool _acceptedTerms = false;
+
+  // Form validation helpers
+  String? _validateName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Name is required';
+    }
+    if (value.length < 2) {
+      return 'Name must be at least 2 characters';
+    }
+    return null;
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    }
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(value)) {
+      return 'Please enter a valid email';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+    // Check for at least one uppercase letter
+    if (!value.contains(RegExp(r'[A-Z]'))) {
+      return 'Password must contain at least one uppercase letter';
+    }
+    // Check for at least one number
+    if (!value.contains(RegExp(r'[0-9]'))) {
+      return 'Password must contain at least one number';
+    }
+    return null;
+  }
+
+  String? _validateConfirmPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please confirm your password';
+    }
+    if (value != _passwordController.text) {
+      return 'Passwords do not match';
+    }
+    return null;
+  }
+
+  Future<void> _handleSignUp() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    if (!_acceptedTerms) {
+      _showErrorDialog('Please accept the Terms and Conditions');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      // TODO: Implement actual signup logic with backend
+      await Future.delayed(const Duration(seconds: 2)); // Simulate network delay
+      
+      if (mounted) {
+        // Show success dialog and navigate to login
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            backgroundColor: AppColors.surfaceColor,
+            title: const Text('Success!'),
+            content: const Text('Your account has been created successfully.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close dialog
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+                child: const Text('Login Now'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        _showErrorDialog('An error occurred. Please try again.');
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Sign Up Error'),
+        content: Text(message),
+        backgroundColor: AppColors.surfaceColor,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: AppColors.backgroundColor,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          AppStrings.signup,
+          style: AppTextStyles.headingMedium,
+        ),
+      ),
       body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 50),
-              const Icon(
-                Icons.person_add,
-                size: 100,
-              ),
-              const SizedBox(height: 50),
-              Text(
-                'Create Account',
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 16,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppDimensions.paddingLarge),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Welcome Text
+                Text(
+                  'Create your account',
+                  style: AppTextStyles.headingLarge,
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(height: 25),
-              MyTextField(
-                controller: usernameController,
-                hintText: 'Username',
-                obscureText: false,
-              ),
-              const SizedBox(height: 10),
-              MyTextField(
-                controller: passwordController,
-                hintText: 'Password',
-                obscureText: true,
-              ),
-              const SizedBox(height: 10),
-              MyTextField(
-                controller: confirmPasswordController,
-                hintText: 'Confirm Password',
-                obscureText: true,
-              ),
-              const SizedBox(height: 10),
-              const SizedBox(height: 25),
-              MyButton(
-                onTap: registerUser,
-              ),
-              const SizedBox(height: 50),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(
+                const SizedBox(height: AppDimensions.marginSmall),
+                Text(
+                  'Please fill in the form to continue',
+                  style: AppTextStyles.bodySmall,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: AppDimensions.marginLarge * 2),
+
+                // Form Fields
+                CustomTextField(
+                  controller: _nameController,
+                  label: 'Full Name',
+                  hint: 'Enter your full name',
+                  validator: _validateName,
+                ),
+                const SizedBox(height: AppDimensions.marginMedium),
+
+                CustomTextField(
+                  controller: _emailController,
+                  label: AppStrings.email,
+                  hint: 'Enter your email',
+                  validator: _validateEmail,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: AppDimensions.marginMedium),
+
+                CustomTextField(
+                  controller: _passwordController,
+                  label: AppStrings.password,
+                  hint: 'Create a password',
+                  isPassword: true,
+                  validator: _validatePassword,
+                ),
+                const SizedBox(height: AppDimensions.marginMedium),
+
+                CustomTextField(
+                  controller: _confirmPasswordController,
+                  label: AppStrings.confirmPassword,
+                  hint: 'Confirm your password',
+                  isPassword: true,
+                  validator: _validateConfirmPassword,
+                ),
+                const SizedBox(height: AppDimensions.marginLarge),
+
+                // Terms and Conditions Checkbox
+                CheckboxListTile(
+                  value: _acceptedTerms,
+                  onChanged: (value) {
+                    setState(() => _acceptedTerms = value ?? false);
+                  },
+                  title: Text(
+                    'I accept the Terms and Conditions',
+                    style: AppTextStyles.bodySmall,
+                  ),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  activeColor: AppColors.primaryColor,
+                  checkColor: Colors.white,
+                ),
+                const SizedBox(height: AppDimensions.marginLarge),
+
+                // Sign Up Button
+                CustomButton(
+                  onPressed: _handleSignUp,
+                  text: AppStrings.signup,
+                  isLoading: _isLoading,
+                ),
+                const SizedBox(height: AppDimensions.marginLarge),
+
+                // Social Sign Up Options
+                Row(
                   children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
+                    const Expanded(
+                      child: Divider(color: AppColors.dividerColor),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppDimensions.paddingMedium,
+                      ),
                       child: Text(
                         'Or sign up with',
-                        style: TextStyle(color: Colors.grey[700]),
+                        style: AppTextStyles.bodySmall,
                       ),
                     ),
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
+                    const Expanded(
+                      child: Divider(color: AppColors.dividerColor),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppDimensions.marginLarge),
+
+                // Social Sign Up Buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _SocialSignUpButton(
+                      icon: Icons.g_mobiledata_rounded,
+                      label: 'Google',
+                      onTap: () {
+                        // TODO: Implement Google Sign Up
+                      },
+                    ),
+                    const SizedBox(width: AppDimensions.marginLarge),
+                    _SocialSignUpButton(
+                      icon: Icons.apple,
+                      label: 'Apple',
+                      onTap: () {
+                        // TODO: Implement Apple Sign Up
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppDimensions.marginLarge),
+
+                // Login Link
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Already have an account?',
+                      style: AppTextStyles.bodySmall,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        AppStrings.login,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.primaryColor,
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 50),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Already have an account?',
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPages()),
-                      );
-                    },
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  )
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SocialSignUpButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _SocialSignUpButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppDimensions.borderRadiusSmall),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.paddingLarge,
+          vertical: AppDimensions.paddingMedium,
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceColor,
+          borderRadius: BorderRadius.circular(AppDimensions.borderRadiusSmall),
+          border: Border.all(color: AppColors.dividerColor),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: AppColors.primaryTextColor),
+            const SizedBox(width: AppDimensions.marginSmall),
+            Text(label, style: AppTextStyles.bodyMedium),
+          ],
         ),
       ),
     );

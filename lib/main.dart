@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:video_tape_store/pages/auth/loginPages.dart';
+import 'package:video_tape_store/pages/home/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,10 +20,9 @@ class MyApp extends StatelessWidget {
           primary: Color(0xFF3498DB),
           secondary: Color(0xFF2ECC71),
           surface: Color(0xFF2D2D2D),
-          background: Color(0xFF1A1A1A),
         ),
       ),
-      home: LoginPages(),
+      home: const HomePage(),
     );
   }
 }
